@@ -1,12 +1,14 @@
 use std::{io::Result, net::TcpListener};
-use ztpir::startup::run;
+use ztpir::{configuration::get_configuration, startup::run};
 
 static PORT: &u16 = &8000;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let listener =
-        TcpListener::bind(format!("127.0.0.1:{}", PORT)).expect("Failed to bind random port");
+    let config = get_configuration().expect("Failed to read configuration file");
+    let address = format!("{}:{}", config.application_host, config.application_port);
+
+    let listener = TcpListener::bind(address).expect("Failed to bind random port");
 
     // equivalent to run()?.await
     match run(listener) {
