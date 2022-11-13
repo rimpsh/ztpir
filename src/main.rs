@@ -1,17 +1,19 @@
+use sqlx::PgPool;
 use std::{io::Result, net::TcpListener};
 use ztpir::{configuration::get_configuration, startup::run};
-
-static PORT: &u16 = &8000;
 
 #[tokio::main]
 async fn main() -> Result<()> {
     let config = get_configuration().expect("Failed to read configuration file");
+    let connection_pool = PgPool::connect(&config.database.connection_string())
+        .await
+        .expect("Failed to connect to database");
+
     let address = format!("{}:{}", config.application_host, config.application_port);
+    let listener = TcpListener::bind(address)?;
 
-    let listener = TcpListener::bind(address).expect("Failed to bind random port");
-
-    // equivalent to run()?.await
-    match run(listener) {
+    // equivalent to run(listener, connection)?.await
+    match run(listener, connection_pool) {
         Ok(server) => server.await,
         Err(err) => Err(err),
     }
