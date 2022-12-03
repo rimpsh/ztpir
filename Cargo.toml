@@ -13,6 +13,9 @@ path = "src/main.rs"
 name = "ztpir"
 
 [dependencies]
+tracing-actix-web = "0.6"
+secrecy = { version = "0.8", features = ["serde"] }
+once_cell = "1"
 config = "0.13"
 actix-web = "4"
 tracing = { version = "0.1", features = ["log"] }

@@ -8,7 +8,7 @@ tasks:
 
   - name: Install cargo dependencies
     command: |
-      cargo install cargo-tarpaulin cargo-audit cargo-expand cargo-udeps
+      cargo install cargo-tarpaulin cargo-audit cargo-expand cargo-udeps bunyan
       cargo install --version="~0.6" sqlx-cli --no-default-features --features rustls,postgres
 
   - name: Start Database
