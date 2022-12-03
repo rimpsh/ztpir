@@ -13,11 +13,11 @@ async fn main() -> Result<()> {
     init_subscriber(macgyver);
 
     let config = get_configuration().expect("Failed to read configuration file");
-    let connection_pool = PgPool::connect(&config.database.connection_string().expose_secret())
-        .await
-        .expect("Failed to connect to database");
+    let connection_pool =
+        PgPool::connect_lazy(&config.database.connection_string().expose_secret())
+            .expect("Failed to connect to database");
 
-    let address = format!("{}:{}", config.application_host, config.application_port);
+    let address = format!("{}:{}", config.application.host, config.application.port);
     let listener = TcpListener::bind(address)?;
 
     // equivalent to run(listener, connection)?.await
